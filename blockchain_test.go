@@ -82,7 +82,7 @@ func TestBlockchain_ValidateTx(t *testing.T) {
 		{LTC, testTxID(LTC), true},
 		{BSV, "", false},
 		{BSV, "12345", false},
-		{BSV, testBitcoinTxID + "1", false},
+		{BSV, testAddress(BSV) + "1", false},
 	}
 
 	for _, testCase := range tests {
@@ -95,5 +95,39 @@ func TestBlockchain_ValidateTx(t *testing.T) {
 		u := Blockchain("unknown")
 		assert.Equal(t, false, u.ValidateTx(testBitcoinTxID))
 		assert.Equal(t, false, u.ValidateTx(""))
+	})
+}
+
+func TestBlockchain_ValidateAddress(t *testing.T) {
+	t.Parallel()
+
+	var tests = []struct {
+		chain    Blockchain
+		address  string
+		expected bool
+	}{
+		{BCH, testAddress(BCH), true},
+		{BSV, testAddress(BSV), true},
+		{BTC, testAddress(BTC), true},
+		{BTCTestnet, testAddress(BTC), true},
+		{BTG, testAddress(BTG), true},
+		{DASH, testAddress(DASH), true},
+		{DOGE, testAddress(DOGE), true},
+		{LTC, testAddress(LTC), true},
+		{BSV, "", false},
+		{BSV, "12345", false},
+		{BSV, "1234567890123456789012345", false},
+	}
+
+	for _, testCase := range tests {
+		t.Run("chain "+testCase.chain.String()+": ValidateAddress()", func(t *testing.T) {
+			assert.Equal(t, testCase.expected, testCase.chain.ValidateAddress(testCase.address), testCase.address)
+		})
+	}
+
+	t.Run("unknown blockchain", func(t *testing.T) {
+		u := Blockchain("unknown")
+		assert.Equal(t, false, u.ValidateAddress(testBitcoinTxID))
+		assert.Equal(t, false, u.ValidateAddress(""))
 	})
 }

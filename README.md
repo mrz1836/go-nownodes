@@ -45,50 +45,58 @@ View the generated [documentation](https://pkg.go.dev/github.com/mrz1836/go-nown
 - Using default [heimdall http client](https://github.com/gojek/heimdall) with exponential backoff & more
 - Use your own custom HTTP client
 - Current coverage for the [nownodes.io API](https://documenter.getpostman.com/view/13630829/TVmFkLwy)
-    - [ ] [BlockBook API](https://documenter.getpostman.com/view/13630829/TVmFkLwy#4399ad95-6e52-4718-af61-3eb168029ddd)
-      - [ ] [BCH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#879a2e0b-06f3-44df-ac89-c21877337fb8)
-        - [x] [get transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#879a2e0b-06f3-44df-ac89-c21877337fb8)
-      - [ ] [BSV](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [address](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [balance history](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [get address](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [get block hash](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [get block](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [get utxo](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [get xpub](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [send transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [status](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [tickers list](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [tickers](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [ ] [tx-specific](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-        - [x] [get transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)
-      - [ ] [BTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#53f3a035-507d-47c1-81c2-f0dea88dacb9)
-        - [ ] [get address](https://documenter.getpostman.com/view/13630829/TVmFkLwy#53f3a035-507d-47c1-81c2-f0dea88dacb9)
-        - [x] [get transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#53f3a035-507d-47c1-81c2-f0dea88dacb9)
-      - [ ] [BTC Testnet](https://documenter.getpostman.com/view/13630829/TVmFkLwy#c6635ae9-aeca-4386-8c43-e4272aebf210)
-        - [ ] [get address](https://documenter.getpostman.com/view/13630829/TVmFkLwy#c6635ae9-aeca-4386-8c43-e4272aebf210)
-        - [x] [get transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#c6635ae9-aeca-4386-8c43-e4272aebf210)
-      - [ ] [BTG](https://documenter.getpostman.com/view/13630829/TVmFkLwy#2aae38ed-5e3c-45cc-8a26-6233eb864592)
-        - [ ] [get address](https://documenter.getpostman.com/view/13630829/TVmFkLwy#2aae38ed-5e3c-45cc-8a26-6233eb864592)
-        - [x] [get transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#2aae38ed-5e3c-45cc-8a26-6233eb864592)
-      - [ ] [DASH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#a3e67064-d108-4787-8d37-34ce924706b1)
-        - [ ] [get address](https://documenter.getpostman.com/view/13630829/TVmFkLwy#a3e67064-d108-4787-8d37-34ce924706b1)
-        - [x] [get transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#a3e67064-d108-4787-8d37-34ce924706b1)
-      - [ ] [DOGE](https://documenter.getpostman.com/view/13630829/TVmFkLwy#780cd932-bcf1-4cbd-93d2-ea3d8dc6fccf)
-        - [ ] [get address](https://documenter.getpostman.com/view/13630829/TVmFkLwy#780cd932-bcf1-4cbd-93d2-ea3d8dc6fccf)
-        - [x] [get transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#780cd932-bcf1-4cbd-93d2-ea3d8dc6fccf)
-      - [ ] [LTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#21871776-39dd-44d2-9ca0-768487abb866)
-        - [ ] [get address](https://documenter.getpostman.com/view/13630829/TVmFkLwy#21871776-39dd-44d2-9ca0-768487abb866)
-        - [x] [get transaction](https://documenter.getpostman.com/view/13630829/TVmFkLwy#21871776-39dd-44d2-9ca0-768487abb866)
-    - [ ] [Node API](https://documenter.getpostman.com/view/13630829/TVmFkLwy#0009132c-1d48-4c03-a891-fe57630776a4)
-      - [ ] [BCH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#879a2e0b-06f3-44df-ac89-c21877337fb8)
-      - [ ] [BSV](https://documenter.getpostman.com/view/13630829/TVmFkLwy#e8c70486-7699-4570-b6e1-ab37ce3699b0)
-      - [ ] [BTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#0c530825-c261-488a-9792-722b6107322e)
-      - [ ] [BTC Testnet](https://documenter.getpostman.com/view/13630829/TVmFkLwy#c6635ae9-aeca-4386-8c43-e4272aebf210)
-      - [ ] [BTG](https://documenter.getpostman.com/view/13630829/TVmFkLwy#2aae38ed-5e3c-45cc-8a26-6233eb864592)
-      - [ ] [DASH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#a3e67064-d108-4787-8d37-34ce924706b1)
-      - [ ] [DOGE](https://documenter.getpostman.com/view/13630829/TVmFkLwy#780cd932-bcf1-4cbd-93d2-ea3d8dc6fccf)
-      - [ ] [LTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#21871776-39dd-44d2-9ca0-768487abb866)
+  - [ ] **[BlockBook API](https://documenter.getpostman.com/view/13630829/TVmFkLwy#4399ad95-6e52-4718-af61-3eb168029ddd)**
+    - [ ] **[BCH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#879a2e0b-06f3-44df-ac89-c21877337fb8)**
+      - [x] get address
+      - [x] get transaction
+      - [ ] send transaction
+    - [ ] **[BSV](https://documenter.getpostman.com/view/13630829/TVmFkLwy#43441850-6177-4828-810e-78ac19e717d4)**
+      - [ ] address
+      - [ ] balance history
+      - [x] get address
+      - [ ] get block
+      - [ ] get block hash
+      - [x] get transaction
+      - [ ] get utxo
+      - [ ] get xpub
+      - [ ] send transaction
+      - [ ] status
+      - [ ] tickers
+      - [ ] tickers list
+      - [ ] tx-specific
+    - [ ] **[BTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#53f3a035-507d-47c1-81c2-f0dea88dacb9)**
+      - [x] get address
+      - [x] get transaction
+      - [ ] send transaction
+    - [ ] **[BTC Testnet](https://documenter.getpostman.com/view/13630829/TVmFkLwy#c6635ae9-aeca-4386-8c43-e4272aebf210)**
+      - [x] get address
+      - [x] get transaction
+      - [ ] send transaction
+    - [ ] **[BTG](https://documenter.getpostman.com/view/13630829/TVmFkLwy#2aae38ed-5e3c-45cc-8a26-6233eb864592)**
+      - [x] get address
+      - [x] get transaction
+      - [ ] send transaction
+    - [ ] [DASH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#a3e67064-d108-4787-8d37-34ce924706b1)
+      - [x] get address
+      - [x] get transaction
+      - [ ] send transaction
+    - [ ] **[DOGE](https://documenter.getpostman.com/view/13630829/TVmFkLwy#780cd932-bcf1-4cbd-93d2-ea3d8dc6fccf)**
+      - [x] get address
+      - [x] get transaction
+      - [ ] send transaction
+    - [ ] **[LTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#21871776-39dd-44d2-9ca0-768487abb866**
+      - [x] get address
+      - [x] get transaction
+      - [ ] send transaction
+  - [ ] **[Node API](https://documenter.getpostman.com/view/13630829/TVmFkLwy#0009132c-1d48-4c03-a891-fe57630776a4)**
+    - [ ] **[BCH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#879a2e0b-06f3-44df-ac89-c21877337fb8)**
+    - [ ] **[BSV](https://documenter.getpostman.com/view/13630829/TVmFkLwy#e8c70486-7699-4570-b6e1-ab37ce3699b0)**
+    - [ ] **[BTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#0c530825-c261-488a-9792-722b6107322e)**
+    - [ ] **[BTC Testnet](https://documenter.getpostman.com/view/13630829/TVmFkLwy#c6635ae9-aeca-4386-8c43-e4272aebf210)**
+    - [ ] **[BTG](https://documenter.getpostman.com/view/13630829/TVmFkLwy#2aae38ed-5e3c-45cc-8a26-6233eb864592)**
+    - [ ] **[DASH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#a3e67064-d108-4787-8d37-34ce924706b1)**
+    - [ ] **[DOGE](https://documenter.getpostman.com/view/13630829/TVmFkLwy#780cd932-bcf1-4cbd-93d2-ea3d8dc6fccf)**
+    - [ ] **[LTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#21871776-39dd-44d2-9ca0-768487abb866)**
 
 <br/>
 

@@ -17,8 +17,15 @@ const (
 	// API header key for NOWNodes API
 	apiHeaderKey = "api-key"
 
+	// Coin specific values
+	bitcoinCashPrefix = "bitcoincash:"
+
 	// Bitcoin transaction length
-	bitcoinTransactionLength = 64
+	bitcoinCashMaxAddressLength = 42
+	bitcoinMaxAddressLength     = 35
+	bitcoinMinAddressLength     = 26
+	bitcoinTransactionLength    = 64
+	liteCoinMaxAddressLength    = 43
 
 	// Blockchains
 	blockchainBCH        = "bch"
@@ -29,6 +36,10 @@ const (
 	blockchainDASH       = "dash"
 	blockchainDOGE       = "doge"
 	blockchainLTC        = "ltc"
+
+	// Routes
+	routeGetAddress = "/address/"
+	routeGetTx      = "/tx/"
 )
 
 var (
@@ -46,14 +57,8 @@ var (
 	}
 
 	// Supported blockchains for the method GetTransaction()
-	getTransactionBlockchains = []Blockchain{
-		BCH,
-		BSV,
-		BTC,
-		BTCTestnet,
-		BTG,
-		DASH,
-		DOGE,
-		LTC,
-	}
+	getTransactionBlockchains = allBlockchains
+
+	// Supported blockchains for the method GetAddress()
+	getAddressBlockchains = getTransactionBlockchains
 )

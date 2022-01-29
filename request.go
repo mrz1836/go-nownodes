@@ -139,3 +139,29 @@ func httpRequest(ctx context.Context, client *Client,
 	response.Error = errors.New(errBody.Error)
 	return
 }
+
+func fireBlockBookRequest(ctx context.Context, client *Client, chains []Blockchain,
+	chain Blockchain, endpoint string, model interface{}) error {
+
+	// Are we using a supported blockchain?
+	if !isBlockchainSupported(chains, chain) {
+		return ErrUnsupportedBlockchain
+	}
+
+	// Fire the HTTP request
+	resp := httpRequest(ctx, client, &httpPayload{
+		APIKey: client.options.apiKey,
+		Method: http.MethodGet,
+		URL:    httpProtocol + chain.BlockBookURL() + "/api/" + apiVersion + endpoint,
+	})
+	if resp.Error != nil {
+		return resp.Error
+	}
+
+	// Unmarshal the response
+	if err := json.Unmarshal(resp.BodyContents, &model); err != nil {
+		return err
+	}
+
+	return nil
+}

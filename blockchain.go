@@ -1,5 +1,7 @@
 package nownodes
 
+import "strings"
+
 // Blockchain is the supported blockchain networks
 type Blockchain string
 
@@ -63,6 +65,34 @@ func (n Blockchain) ValidateTx(txID string) bool {
 		return len(txID) == bitcoinTransactionLength
 	case LTC:
 		return len(txID) == bitcoinTransactionLength
+	default:
+		return false
+	}
+}
+
+// ValidateAddress will do basic validations on the address
+func (n Blockchain) ValidateAddress(address string) bool {
+	switch n {
+	case BCH:
+		// note: validate that it's a LTC address (prefix)
+		withoutPrefix := strings.ReplaceAll(address, bitcoinCashPrefix, "")
+		return len(withoutPrefix) >= bitcoinMinAddressLength && len(withoutPrefix) <= bitcoinCashMaxAddressLength
+	case BSV:
+		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
+	case BTC:
+		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
+	case BTCTestnet:
+		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
+	case BTG:
+		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
+	case DASH:
+		// note: validate that it's a LTC address (prefix)
+		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
+	case DOGE:
+		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
+	case LTC:
+		// note: validate that it's a LTC address (prefix)
+		return len(address) >= bitcoinMinAddressLength && len(address) <= liteCoinMaxAddressLength
 	default:
 		return false
 	}

@@ -2,8 +2,6 @@ package nownodes
 
 import (
 	"context"
-	"encoding/json"
-	"net/http"
 )
 
 // TransactionInfo is the transaction information returned to the GetTransaction request
@@ -51,30 +49,17 @@ type Output struct {
 // This method supports the following chains: BCH, BSV, BTC, BTCTestnet, BTG, DASH, DOGE, LTC
 func (c *Client) GetTransaction(ctx context.Context, chain Blockchain, txID string) (*TransactionInfo, error) {
 
-	// Check for a transaction id
+	// Validate the input
 	if !chain.ValidateTx(txID) {
 		return nil, ErrInvalidTxID
 	}
 
-	// Are we using a supported blockchain?
-	if !isBlockchainSupported(getTransactionBlockchains, chain) {
-		return nil, ErrUnsupportedBlockchain
-	}
-
 	// Fire the HTTP request
-	resp := httpRequest(ctx, c, &httpPayload{
-		APIKey: c.options.apiKey,
-		Method: http.MethodGet,
-		URL:    httpProtocol + chain.BlockBookURL() + "/api/" + apiVersion + "/tx/" + txID,
-	})
-	if resp.Error != nil {
-		return nil, resp.Error
-	}
-
-	// Convert response into a transaction
-	txInfo := new(TransactionInfo)
-	if err := json.Unmarshal(resp.BodyContents, &txInfo); err != nil {
+	info := new(TransactionInfo)
+	if err := fireBlockBookRequest(
+		ctx, c, getTransactionBlockchains, chain, routeGetTx+txID, &info,
+	); err != nil {
 		return nil, err
 	}
-	return txInfo, nil
+	return info, nil
 }
