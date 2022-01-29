@@ -1,18 +1,18 @@
 # go-nownodes
 > The unofficial golang implementation for the [nownodes.io API](https://nownodes.io)
 
-[![Release](https://img.shields.io/github/release-pre/mrz1836/go-nownodes.svg?logo=github&style=flat&v=1)](https://github.com/mrz1836/go-nownodes/releases)
-[![Build Status](https://img.shields.io/github/workflow/status/mrz1836/go-nownodes/run-go-tests?logo=github&v=1)](https://github.com/mrz1836/go-nownodes/actions)
-[![Report](https://goreportcard.com/badge/github.com/mrz1836/go-nownodes?style=flat&v=1)](https://goreportcard.com/report/github.com/mrz1836/go-nownodes)
-[![codecov](https://codecov.io/gh/mrz1836/go-nownodes/branch/master/graph/badge.svg?v=1)](https://codecov.io/gh/mrz1836/go-nownodes)
-[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/mrz1836/go-nownodes&style=flat&v=1)](https://mergify.io)
-[![Go](https://img.shields.io/github/go-mod/go-version/mrz1836/go-nownodes?v=1)](https://golang.org/)
+[![Release](https://img.shields.io/github/release-pre/mrz1836/go-nownodes.svg?logo=github&style=flat&v=2)](https://github.com/mrz1836/go-nownodes/releases)
+[![Build Status](https://img.shields.io/github/workflow/status/mrz1836/go-nownodes/run-go-tests?logo=github&v=2)](https://github.com/mrz1836/go-nownodes/actions)
+[![Report](https://goreportcard.com/badge/github.com/mrz1836/go-nownodes?style=flat&v=2)](https://goreportcard.com/report/github.com/mrz1836/go-nownodes)
+[![codecov](https://codecov.io/gh/mrz1836/go-nownodes/branch/master/graph/badge.svg?v=2)](https://codecov.io/gh/mrz1836/go-nownodes)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/mrz1836/go-nownodes&style=flat&v=2)](https://mergify.io)
+[![Go](https://img.shields.io/github/go-mod/go-version/mrz1836/go-nownodes?v=2)](https://golang.org/)
 <br>
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/mrz1836/go-nownodes)
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat)](https://github.com/RichardLitt/standard-readme)
 [![Makefile Included](https://img.shields.io/badge/Makefile-Supported%20-brightgreen?=flat&logo=probot)](Makefile)
-[![Sponsor](https://img.shields.io/badge/sponsor-mrz1836-181717.svg?logo=github&style=flat&v=1)](https://github.com/sponsors/mrz1836)
-[![Donate](https://img.shields.io/badge/donate-bitcoin-ff9900.svg?logo=bitcoin&style=flat&v=1)](https://gobitcoinsv.com/#sponsor?utm_source=github&utm_medium=sponsor-link&utm_campaign=go-nownodes&utm_term=go-nownodes&utm_content=go-nownodes)
+[![Sponsor](https://img.shields.io/badge/sponsor-mrz1836-181717.svg?logo=github&style=flat&v=2)](https://github.com/sponsors/mrz1836)
+[![Donate](https://img.shields.io/badge/donate-bitcoin-ff9900.svg?logo=bitcoin&style=flat&v=2)](https://gobitcoinsv.com/#sponsor?utm_source=github&utm_medium=sponsor-link&utm_campaign=go-nownodes&utm_term=go-nownodes&utm_content=go-nownodes)
 
 <br/>
 
@@ -38,7 +38,7 @@ go get -u github.com/mrz1836/go-nownodes
 ## Documentation
 View the generated [documentation](https://pkg.go.dev/github.com/mrz1836/go-nownodes)
 
-[![GoDoc](https://godoc.org/github.com/mrz1836/go-nownodes?status.svg&style=flat&v=1)](https://pkg.go.dev/github.com/mrz1836/go-nownodes)
+[![GoDoc](https://godoc.org/github.com/mrz1836/go-nownodes?status.svg&style=flat&v=2)](https://pkg.go.dev/github.com/mrz1836/go-nownodes)
 
 ### Features
 - [Client](client.go) is completely configurable
@@ -266,4 +266,4 @@ Thank you to these wonderful people ([emoji key](https://allcontributors.org/doc
 
 ## License
 
-[![License](https://img.shields.io/github/license/mrz1836/go-nownodes.svg?style=flat&v=1)](LICENSE)
+[![License](https://img.shields.io/github/license/mrz1836/go-nownodes.svg?style=flat&v=2)](LICENSE)
