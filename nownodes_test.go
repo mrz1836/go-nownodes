@@ -16,7 +16,7 @@ func testTxID(chain Blockchain) string {
 	switch chain {
 	case BCH:
 		return testBCHTxID
-	case BTC:
+	case BTC, BTCTestnet:
 		return testBTCTxID
 	case BTG:
 		return testBTGTxID
@@ -26,6 +26,8 @@ func testTxID(chain Blockchain) string {
 		return testDOGETxID
 	case LTC:
 		return testLTCTxID
+	case BSV:
+		return testBitcoinTxID
 	default:
 		return testBitcoinTxID
 	}
