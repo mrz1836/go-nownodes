@@ -1,5 +1,5 @@
 - color: 0075ca
-  description: "Documentation"
+  description: "Improvements or additions to documentation"
   name: "documentation"
 - color: b23128
   description: "Highest rated bug or issue, affects all"
