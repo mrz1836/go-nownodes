@@ -1,5 +1,5 @@
 # go-nownodes
-> The unofficial golang implementation for the [nownodes.io API](https://nownodes.io)
+> The unofficial golang implementation for the [NOWNodes.io API](https://nownodes.io)
 
 [![Release](https://img.shields.io/github/release-pre/mrz1836/go-nownodes.svg?logo=github&style=flat&v=2)](https://github.com/mrz1836/go-nownodes/releases)
 [![Build Status](https://img.shields.io/github/workflow/status/mrz1836/go-nownodes/run-go-tests?logo=github&v=2)](https://github.com/mrz1836/go-nownodes/actions)
@@ -44,7 +44,7 @@ View the generated [documentation](https://pkg.go.dev/github.com/mrz1836/go-nown
 - [Client](client.go) is completely configurable
 - Using default [heimdall http client](https://github.com/gojek/heimdall) with exponential backoff & more
 - Use your own custom HTTP client
-- Current coverage for the [nownodes.io API](https://documenter.getpostman.com/view/13630829/TVmFkLwy)
+- Current coverage for the [NOWNodes.io API](https://documenter.getpostman.com/view/13630829/TVmFkLwy)
   - [ ] **[BlockBook API](https://documenter.getpostman.com/view/13630829/TVmFkLwy#4399ad95-6e52-4718-af61-3eb168029ddd)**
     - [ ] **[BCH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#879a2e0b-06f3-44df-ac89-c21877337fb8)**
       - [x] get address
