@@ -1,4 +1,4 @@
-package template
+package nownodes
 
 import (
 	"testing"

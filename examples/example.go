@@ -1,7 +1,7 @@
 package main
 
-import "github.com/mrz1836/go-template"
+import "github.com/mrz1836/go-nownodes"
 
 func main() {
-	template.Greet()
+	nownodes.Greet()
 }
