@@ -5,8 +5,3 @@
 //
 // By MrZ (https://github.com/mrz1836)
 package nownodes
-
-// Greet will say hi!
-func Greet() string {
-	return "Hi!"
-}
