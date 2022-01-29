@@ -76,7 +76,7 @@ View the generated [documentation](https://pkg.go.dev/github.com/mrz1836/go-nown
       - [x] get address
       - [x] get transaction
       - [ ] send transaction
-    - [ ] [DASH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#a3e67064-d108-4787-8d37-34ce924706b1)
+    - [ ] **[DASH](https://documenter.getpostman.com/view/13630829/TVmFkLwy#a3e67064-d108-4787-8d37-34ce924706b1)**
       - [x] get address
       - [x] get transaction
       - [ ] send transaction
@@ -84,7 +84,7 @@ View the generated [documentation](https://pkg.go.dev/github.com/mrz1836/go-nown
       - [x] get address
       - [x] get transaction
       - [ ] send transaction
-    - [ ] **[LTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#21871776-39dd-44d2-9ca0-768487abb866**
+    - [ ] **[LTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#21871776-39dd-44d2-9ca0-768487abb866)**
       - [x] get address
       - [x] get transaction
       - [ ] send transaction
