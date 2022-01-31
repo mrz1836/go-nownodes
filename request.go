@@ -1,7 +1,10 @@
 package nownodes
 
 import (
+	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -23,8 +26,8 @@ type RequestResponse struct {
 
 // httpPayload is used for a httpRequest
 type httpPayload struct {
-	// Data   []byte `json:"data"`
 	APIKey string `json:"api_key"`
+	Data   []byte `json:"data"`
 	Method string `json:"method"`
 	URL    string `json:"url"`
 }
@@ -38,13 +41,10 @@ func httpRequest(ctx context.Context, client *Client,
 	response = new(RequestResponse)
 
 	// Add post data if applicable
-	/*
-		todo: enable once there are requests that require these methods
-		if payload.Method == http.MethodPost || payload.Method == http.MethodPut {
-			bodyReader = bytes.NewBuffer(payload.Data)
-			response.PostData = string(payload.Data)
-		}
-	*/
+	if payload.Method == http.MethodPost {
+		bodyReader = bytes.NewBuffer(payload.Data)
+		response.PostData = string(payload.Data)
+	}
 
 	// Store for debugging purposes
 	response.Method = payload.Method
@@ -62,12 +62,9 @@ func httpRequest(ctx context.Context, client *Client,
 	request.Header.Set("User-Agent", client.options.userAgent)
 
 	// Set the content type on Method
-	/*
-		note: see above
-		if payload.Method == http.MethodPost || payload.Method == http.MethodPut {
-			request.Header.Set("Content-Type", "application/json")
-		}
-	*/
+	if payload.Method == http.MethodPost {
+		request.Header.Set("Content-Type", "application/json")
+	}
 
 	// Set a token if supplied
 	if len(payload.APIKey) > 0 {
@@ -127,16 +124,29 @@ func httpRequest(ctx context.Context, client *Client,
 	}
 
 	// Have a "body" so map to an error type and add to the error message.
-	errBody := struct {
-		Error string `json:"error"`
-	}{}
-	if err := json.Unmarshal(
-		response.BodyContents, &errBody,
-	); err != nil {
-		response.Error = fmt.Errorf("failed to unmarshal error response: %w", err)
-		return
+	if payload.Method == http.MethodGet {
+		errBody := struct {
+			Error string `json:"error"`
+		}{}
+		if err := json.Unmarshal(
+			response.BodyContents, &errBody,
+		); err != nil {
+			response.Error = fmt.Errorf("failed to unmarshal error response: %w", err)
+			return
+		}
+		response.Error = errors.New(errBody.Error)
+	} else {
+		errBody := new(NodeError)
+		if err := json.Unmarshal(
+			response.BodyContents, &errBody,
+		); err != nil {
+			response.Error = fmt.Errorf("failed to unmarshal error response: %w", err)
+			return
+		}
+		response.Error = fmt.Errorf(
+			"code [%d] error [%s]", errBody.Error.Code, errBody.Error.Message,
+		)
 	}
-	response.Error = errors.New(errBody.Error)
 	return
 }
 
@@ -193,3 +203,56 @@ func blockBookRequestWithNoResponse(ctx context.Context, client *Client, chains 
 	return nil
 }
 */
+
+// nodeRequest will make a NodeAPI request and return the result
+func nodeRequest(ctx context.Context, client *Client, chains []Blockchain,
+	chain Blockchain, payload []byte, model interface{}) error {
+
+	// Are we using a supported blockchain?
+	if !isBlockchainSupported(chains, chain) {
+		return ErrUnsupportedBlockchain
+	}
+
+	// Fire the HTTP request
+	resp := httpRequest(ctx, client, &httpPayload{
+		APIKey: client.options.apiKey,
+		Data:   payload,
+		Method: http.MethodPost,
+		URL:    httpProtocol + chain.NodeAPIURL(),
+	})
+	if resp.Error != nil {
+		return resp.Error
+	}
+
+	// Unmarshal the response
+	return json.Unmarshal(
+		resp.BodyContents, &model,
+	)
+}
+
+// nodePayload is the internal raw node payload
+type nodePayload struct {
+	APIKey  string   `json:"API_key"`
+	ID      string   `json:"id"`
+	JSONRPC string   `json:"jsonrpc"`
+	Method  string   `json:"method"`
+	Params  []string `json:"params"`
+}
+
+// createPayload will create the JSON payload for the NodeAPI requests
+func createPayload(apiKey, method, id string, params []string) []byte {
+	b, _ := json.Marshal(nodePayload{ // nolint: errchkjson // not going to produce an error
+		APIKey:  apiKey,
+		JSONRPC: "2.0",
+		ID:      id,
+		Method:  method,
+		Params:  params,
+	})
+	return b
+}
+
+// hashString will generate a hash of the given string
+func hashString(data string) string {
+	hash := sha256.Sum256([]byte(data))
+	return hex.EncodeToString(hash[:])
+}
