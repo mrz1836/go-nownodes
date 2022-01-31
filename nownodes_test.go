@@ -7,8 +7,10 @@ import (
 )
 
 const (
-	testKey       = "test-key-1234567" // Test API Key
-	testUserAgent = "test-user-agent"  // Test user agent
+	// Testing variables
+	testKey       = "test-key-1234567"      // Test API Key
+	testUniqueID  = "test-custom-unique-id" // Test id for node requests
+	testUserAgent = "test-user-agent"       // Test user agent
 
 	// Test transactions
 	testBCHTxID     = "fb91f4b1969c7dcff3a1199b26ba9b33af658cec98641a32740f06f0e09b0efe" // https://blockchair.com/bitcoin-cash/transaction/<txid>
