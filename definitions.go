@@ -62,8 +62,8 @@ var (
 	getTransactionBlockchains = allBlockchains
 
 	// Supported blockchains for the method GetAddress()
-	getAddressBlockchains = getTransactionBlockchains
+	getAddressBlockchains = allBlockchains
 
 	// Supported blockchains for the method SendTransaction()
-	sendTransactionBlockchains = getTransactionBlockchains
+	sendTransactionBlockchains = allBlockchains
 )
