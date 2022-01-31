@@ -463,8 +463,7 @@ func TestClient_GetTransaction(t *testing.T) {
 	t.Run("unsupported chain", func(t *testing.T) {
 		c := NewClient(WithHTTPClient(&validTxResponse{}))
 		ctx := context.Background()
-		getTransactionBlockchains = []Blockchain{BSV}
-		info, err := c.GetTransaction(ctx, BTC, testTxID(BTC))
+		info, err := c.GetTransaction(ctx, ETH, testTxID(ETH))
 		require.Error(t, err)
 		require.Nil(t, info)
 		assert.ErrorIs(t, err, ErrUnsupportedBlockchain)
@@ -588,8 +587,8 @@ func TestClient_SendTransaction(t *testing.T) {
 		c := NewClient(WithHTTPClient(&validNodeResponse{}))
 		ctx := context.Background()
 		for _, chain := range sendRawTransactionBlockchains {
-			results, err := c.SendTransaction(ctx, chain, randomHexString(2001))
-			require.NoError(t, err)
+			results, err := c.SendTransaction(ctx, chain, randomHexString(2002))
+			require.NoError(t, err, chain)
 			require.NotNil(t, results)
 		}
 	})
@@ -623,8 +622,7 @@ func TestClient_SendTransaction(t *testing.T) {
 	t.Run("unsupported chain", func(t *testing.T) {
 		c := NewClient(WithHTTPClient(&validTxResponse{}))
 		ctx := context.Background()
-		sendTransactionBlockchains = []Blockchain{BSV}
-		results, err := c.SendTransaction(ctx, BTC, testTxHex(BTC))
+		results, err := c.SendTransaction(ctx, ETH, testTxHex(ETH))
 		require.Error(t, err)
 		require.Nil(t, results)
 		assert.ErrorIs(t, err, ErrUnsupportedBlockchain)
@@ -778,8 +776,7 @@ func TestClient_SendRawTransaction(t *testing.T) {
 	t.Run("unsupported chain", func(t *testing.T) {
 		c := NewClient(WithHTTPClient(&validNodeResponse{}))
 		ctx := context.Background()
-		sendRawTransactionBlockchains = []Blockchain{BSV}
-		results, err := c.SendRawTransaction(ctx, BTC, testTxHex(BTC), testUniqueID)
+		results, err := c.SendRawTransaction(ctx, ETH, testTxHex(ETH), testUniqueID)
 		require.Error(t, err)
 		require.Nil(t, results)
 		assert.ErrorIs(t, err, ErrUnsupportedBlockchain)

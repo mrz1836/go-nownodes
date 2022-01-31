@@ -282,8 +282,7 @@ func TestClient_GetAddress(t *testing.T) {
 	t.Run("unsupported chain", func(t *testing.T) {
 		c := NewClient(WithHTTPClient(&validAddressResponse{}))
 		ctx := context.Background()
-		getAddressBlockchains = []Blockchain{BSV}
-		info, err := c.GetAddress(ctx, BTC, testAddress(BTC))
+		info, err := c.GetAddress(ctx, ETH, testAddress(ETH))
 		require.Error(t, err)
 		require.Nil(t, info)
 		assert.ErrorIs(t, err, ErrUnsupportedBlockchain)

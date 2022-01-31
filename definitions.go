@@ -25,6 +25,8 @@ const (
 	bitcoinMaxAddressLength     = 35
 	bitcoinMinAddressLength     = 26
 	bitcoinTransactionLength    = 64
+	ethereumMaxAddressLength    = 44
+	ethereumTransactionLength   = 66
 	liteCoinMaxAddressLength    = 43
 	maxTxHexLengthOnSend        = 2000
 
@@ -36,6 +38,7 @@ const (
 	blockchainBTG        = "btg"
 	blockchainDASH       = "dash"
 	blockchainDOGE       = "doge"
+	blockchainETH        = "eth"
 	blockchainLTC        = "ltc"
 
 	// Routes

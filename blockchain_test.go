@@ -21,6 +21,7 @@ func TestBlockchain_String(t *testing.T) {
 		{DASH, blockchainDASH},
 		{DOGE, blockchainDOGE},
 		{LTC, blockchainLTC},
+		{ETH, blockchainETH},
 	}
 
 	for _, testCase := range tests {
@@ -50,6 +51,7 @@ func TestBlockchain_BlockBookURL(t *testing.T) {
 		{DASH, blockchainDASH + "." + nowNodesURL},
 		{DOGE, blockchainDOGE + "." + nowNodesURL},
 		{LTC, blockchainLTC + "." + nowNodesURL},
+		{ETH, blockchainETH + "." + nowNodesURL},
 	}
 
 	for _, testCase := range tests {
@@ -79,6 +81,7 @@ func TestBlockchain_NodeAPIURL(t *testing.T) {
 		{DASH, blockchainDASH + "." + nowNodesURL},
 		{DOGE, blockchainDOGE + "." + nowNodesURL},
 		{LTC, blockchainLTC + "." + nowNodesURL},
+		{ETH, blockchainETH + "." + nowNodesURL},
 	}
 
 	for _, testCase := range tests {
@@ -112,6 +115,7 @@ func TestBlockchain_ValidateTxID(t *testing.T) {
 		{BSV, "", false},
 		{BSV, "12345", false},
 		{BSV, testTxID(BSV) + "1", false},
+		{ETH, testTxID(ETH), true},
 	}
 
 	for _, testCase := range tests {
@@ -146,6 +150,7 @@ func TestBlockchain_ValidateTxHex(t *testing.T) {
 		{BSV, "", false},
 		{BSV, "12345", false},
 		{BSV, testTxHex(BSV) + "1", false},
+		{ETH, testTxHex(ETH), true}, // NOT IMPLEMENTED YET
 	}
 
 	for _, testCase := range tests {
@@ -180,6 +185,7 @@ func TestBlockchain_ValidateAddress(t *testing.T) {
 		{BSV, "", false},
 		{BSV, "12345", false},
 		{BSV, "1234567890123456789012345", false},
+		{ETH, "", false},
 	}
 
 	for _, testCase := range tests {

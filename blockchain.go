@@ -18,6 +18,7 @@ const (
 	DASH       Blockchain = blockchainDASH       // Dash: https://www.dash.org/
 	DOGE       Blockchain = blockchainDOGE       // DogeCoin: https://dogecoin.com/
 	LTC        Blockchain = blockchainLTC        // LiteCoin: https://litecoin.org/
+	ETH        Blockchain = blockchainETH        // Ethereum: https://ethereum.org/
 )
 
 const (
@@ -48,6 +49,8 @@ func (n Blockchain) BlockBookURL() string {
 		return blockchainDOGE + period + nowNodesURL
 	case LTC:
 		return blockchainLTC + period + nowNodesURL
+	case ETH:
+		return blockchainETH + period + nowNodesURL
 	default:
 		return ""
 	}
@@ -63,6 +66,8 @@ func (n Blockchain) ValidateTxID(txID string) bool {
 	switch n {
 	case BCH, BSV, BTC, BTCTestnet, BTG, DASH, DOGE, LTC:
 		return len(txID) == bitcoinTransactionLength
+	case ETH:
+		return len(txID) == ethereumTransactionLength
 	default:
 		return false
 	}
@@ -78,6 +83,8 @@ func (n Blockchain) ValidateTxHex(txHex string) bool {
 			return false
 		}
 		return true
+	case ETH:
+		return true // NOT IMPLEMENTED
 	default:
 		return false
 	}
@@ -100,6 +107,9 @@ func (n Blockchain) ValidateAddress(address string) bool {
 	case LTC:
 		// note: validate that it's a LTC address (prefix)
 		return len(address) >= bitcoinMinAddressLength && len(address) <= liteCoinMaxAddressLength
+	case ETH:
+		// note: validate that it's a ETH address
+		return len(address) >= bitcoinMinAddressLength && len(address) <= ethereumMaxAddressLength
 	default:
 		return false
 	}

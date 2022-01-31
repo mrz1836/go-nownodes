@@ -77,8 +77,7 @@ func TestClient_GetMempoolEntry(t *testing.T) {
 	t.Run("unsupported chain", func(t *testing.T) {
 		c := NewClient(WithHTTPClient(&validNodeResponse{}))
 		ctx := context.Background()
-		getMempoolEntryBlockchains = []Blockchain{BSV}
-		results, err := c.GetMempoolEntry(ctx, BTC, testTxID(BTC), testUniqueID)
+		results, err := c.GetMempoolEntry(ctx, ETH, testTxID(ETH), testUniqueID)
 		require.Error(t, err)
 		require.Nil(t, results)
 		assert.ErrorIs(t, err, ErrUnsupportedBlockchain)
