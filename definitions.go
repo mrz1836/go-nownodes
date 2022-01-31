@@ -42,6 +42,10 @@ const (
 	routeGetAddress = "/address/"
 	routeGetTx      = "/tx/"
 	routeSendTx     = "/sendtx/"
+
+	// NodeAPI methods
+	nodeMethodGetMempoolEntry = "getmempoolentry"
+	nodeMethodSendRawTx       = "sendrawtransaction"
 )
 
 var (
@@ -66,4 +70,10 @@ var (
 
 	// Supported blockchains for the method SendTransaction()
 	sendTransactionBlockchains = allBlockchains
+
+	// Supported blockchains for the method SendRawTransaction()
+	sendRawTransactionBlockchains = allBlockchains
+
+	// Supported blockchains for the method GetMempoolEntry()
+	getMempoolEntryBlockchains = allBlockchains
 )
