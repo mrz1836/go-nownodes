@@ -1,6 +1,9 @@
 package nownodes
 
-import "strings"
+import (
+	"encoding/hex"
+	"strings"
+)
 
 // Blockchain is the supported blockchain networks
 type Blockchain string
@@ -46,25 +49,26 @@ func (n Blockchain) BlockBookURL() string {
 	}
 }
 
-// ValidateTx will do basic validations on the tx id string
-func (n Blockchain) ValidateTx(txID string) bool {
+// ValidateTxID will do basic validations on the tx id string
+func (n Blockchain) ValidateTxID(txID string) bool {
 	switch n {
-	case BCH:
+	case BCH, BSV, BTC, BTCTestnet, BTG, DASH, DOGE, LTC:
 		return len(txID) == bitcoinTransactionLength
-	case BSV:
-		return len(txID) == bitcoinTransactionLength
-	case BTC:
-		return len(txID) == bitcoinTransactionLength
-	case BTCTestnet:
-		return len(txID) == bitcoinTransactionLength
-	case BTG:
-		return len(txID) == bitcoinTransactionLength
-	case DASH:
-		return len(txID) == bitcoinTransactionLength
-	case DOGE:
-		return len(txID) == bitcoinTransactionLength
-	case LTC:
-		return len(txID) == bitcoinTransactionLength
+	default:
+		return false
+	}
+}
+
+// ValidateTxHex will do basic validations on the tx hex string
+func (n Blockchain) ValidateTxHex(txHex string) bool {
+	switch n {
+	case BCH, BSV, BTC, BTCTestnet, BTG, DASH, DOGE, LTC:
+		if b, err := hex.DecodeString(
+			txHex,
+		); err != nil || len(b) == 0 {
+			return false
+		}
+		return true
 	default:
 		return false
 	}
@@ -79,16 +83,10 @@ func (n Blockchain) ValidateAddress(address string) bool {
 		return len(withoutPrefix) >= bitcoinMinAddressLength && len(withoutPrefix) <= bitcoinCashMaxAddressLength
 	case BSV:
 		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
-	case BTC:
-		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
-	case BTCTestnet:
-		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
-	case BTG:
+	case BTC, BTCTestnet, BTG, DOGE:
 		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
 	case DASH:
-		// note: validate that it's a LTC address (prefix)
-		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
-	case DOGE:
+		// note: validate that it's a DASH address (prefix)
 		return len(address) >= bitcoinMinAddressLength && len(address) <= bitcoinMaxAddressLength
 	case LTC:
 		// note: validate that it's a LTC address (prefix)

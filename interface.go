@@ -10,6 +10,7 @@ type AddressService interface {
 // TransactionService is the transaction related requests
 type TransactionService interface {
 	GetTransaction(ctx context.Context, chain Blockchain, txID string) (*TransactionInfo, error)
+	SendTransaction(ctx context.Context, chain Blockchain, txHex string) (*BroadcastResult, error)
 }
 
 // ClientInterface is the client interface

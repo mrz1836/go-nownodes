@@ -39,7 +39,7 @@ func (v *validAddressResponse) Do(req *http.Request) (*http.Response, error) {
 
 	// Valid response
 	for _, chain := range getAddressBlockchains {
-		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), "address/"+testAddress(chain)) {
+		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeGetAddress+testAddress(chain)) {
 			resp.StatusCode = http.StatusOK
 			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(addressResponses[chain.String()])))
 			return resp, nil
@@ -64,7 +64,7 @@ func (v *errorInvalidAddress) Do(req *http.Request) (*http.Response, error) {
 
 	// Error response
 	for _, chain := range getAddressBlockchains {
-		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), "/address/"+testAddress(chain)) {
+		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeGetAddress+testAddress(chain)) {
 			resp.StatusCode = http.StatusBadRequest
 			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error": "Invalid address, decoded address is of unknown format"}`)))
 			return resp, nil

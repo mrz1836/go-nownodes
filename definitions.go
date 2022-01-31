@@ -26,6 +26,7 @@ const (
 	bitcoinMinAddressLength     = 26
 	bitcoinTransactionLength    = 64
 	liteCoinMaxAddressLength    = 43
+	maxTxHexLengthOnSend        = 2000
 
 	// Blockchains
 	blockchainBCH        = "bch"
@@ -40,6 +41,7 @@ const (
 	// Routes
 	routeGetAddress = "/address/"
 	routeGetTx      = "/tx/"
+	routeSendTx     = "/sendtx/"
 )
 
 var (
@@ -61,4 +63,7 @@ var (
 
 	// Supported blockchains for the method GetAddress()
 	getAddressBlockchains = getTransactionBlockchains
+
+	// Supported blockchains for the method SendTransaction()
+	sendTransactionBlockchains = getTransactionBlockchains
 )

@@ -31,7 +31,7 @@ func (c *Client) GetAddress(ctx context.Context, chain Blockchain, address strin
 
 	// Fire the HTTP request
 	info := new(AddressInfo)
-	if err := fireBlockBookRequest(
+	if err := blockBookRequest(
 		ctx, c, getAddressBlockchains, chain, routeGetAddress+address, &info,
 	); err != nil {
 		return nil, err

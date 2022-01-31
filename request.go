@@ -140,12 +140,30 @@ func httpRequest(ctx context.Context, client *Client,
 	return
 }
 
-func fireBlockBookRequest(ctx context.Context, client *Client, chains []Blockchain,
+// blockBookRequest will make a BlockBook request and imbue the results into the given model
+func blockBookRequest(ctx context.Context, client *Client, chains []Blockchain,
 	chain Blockchain, endpoint string, model interface{}) error {
+
+	resp, err := blockBookRequestInternal(
+		ctx, client, chains, chain, endpoint,
+	)
+	if err != nil {
+		return err
+	}
+
+	// Unmarshal the response
+	return json.Unmarshal(
+		resp.BodyContents, &model,
+	)
+}
+
+// blockBookRequestInternal will make a BlockBook request and return the result
+func blockBookRequestInternal(ctx context.Context, client *Client, chains []Blockchain,
+	chain Blockchain, endpoint string) (*RequestResponse, error) {
 
 	// Are we using a supported blockchain?
 	if !isBlockchainSupported(chains, chain) {
-		return ErrUnsupportedBlockchain
+		return nil, ErrUnsupportedBlockchain
 	}
 
 	// Fire the HTTP request
@@ -155,13 +173,23 @@ func fireBlockBookRequest(ctx context.Context, client *Client, chains []Blockcha
 		URL:    httpProtocol + chain.BlockBookURL() + "/api/" + apiVersion + endpoint,
 	})
 	if resp.Error != nil {
-		return resp.Error
+		return nil, resp.Error
 	}
 
-	// Unmarshal the response
-	if err := json.Unmarshal(resp.BodyContents, &model); err != nil {
+	return resp, nil
+}
+
+/*
+// blockBookRequestWithNoResponse will make a BlockBook request and only return an error if it fails
+func blockBookRequestWithNoResponse(ctx context.Context, client *Client, chains []Blockchain,
+	chain Blockchain, endpoint string) error {
+
+	_, err := blockBookRequestInternal(
+		ctx, client, chains, chain, endpoint,
+	)
+	if err != nil {
 		return err
 	}
-
 	return nil
 }
+*/

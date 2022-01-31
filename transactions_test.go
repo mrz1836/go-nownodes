@@ -37,11 +37,20 @@ func (v *validTxResponse) Do(req *http.Request) (*http.Response, error) {
 		LTC.String():  `{"txid":"dfca839b7686a458e94001e53df4bd3bbe967d7ba5622f67b38cd6e2650bb37a","version":1,"vin":[{"txid":"95f0a38d47ea3fd21d467a683ef744391d777000ac1dec96f2bd24759cbd76f5","vout":1,"sequence":4294967295,"n":0,"addresses":["ltc1q684prk03qaz2uqenylktaq5z9qcg3dz7fgg0ps"],"isAddress":true,"value":"4890906"}],"vout":[{"value":"100000","n":0,"hex":"a914777762c97ceb6cd2ec0eded08868bd953e838f7987","addresses":["MJnqfLNiC3LvH2efxjP4yNjdKbVgpGf3Ar"],"isAddress":true},{"value":"4785482","n":1,"spent":true,"hex":"0014d1ea11d9f10744ae033327ecbe8282283088b45e","addresses":["ltc1q684prk03qaz2uqenylktaq5z9qcg3dz7fgg0ps"],"isAddress":true}],"blockHash":"b8f2cb74105dd4e7b8850bc1743cf3174f7365ef5bce6f015a83e8918e2ad58f","blockHeight":2202057,"confirmations":7,"blockTime":1643487498,"value":"4885482","valueIn":"4890906","fees":"5424","hex":"01000000000101f576bd9c7524bdf296ec1dac0070771d3944f73e687a461dd23fea478da3f0950100000000ffffffff02a08601000000000017a914777762c97ceb6cd2ec0eded08868bd953e838f79874a05490000000000160014d1ea11d9f10744ae033327ecbe8282283088b45e02483045022100fd62f1f896e0ec3d75e84c977f91d163fe28bc576827bd39015ef507ea4bb3ee02201ff0f5baa4a2336bbb9bc92029d10dfa82db636b5ca178d3a7b621dfefdd8ac4012102c4303428959c2d86c3c742586651f384685b99ee007a186e7a1326f5548c682e00000000"}`,
 	}
 
-	// Valid response
+	// Valid response (get tx)
 	for _, chain := range getTransactionBlockchains {
-		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), "tx/"+testTxID(chain)) {
+		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeGetTx+testTxID(chain)) {
 			resp.StatusCode = http.StatusOK
 			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(transactionResponses[chain.String()])))
+			return resp, nil
+		}
+	}
+
+	// Valid response (send tx)
+	for _, chain := range sendTransactionBlockchains {
+		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeSendTx+testTxHex(chain)) {
+			resp.StatusCode = http.StatusOK
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"result":"` + testTxHexID(chain) + `"}`)))
 			return resp, nil
 		}
 	}
@@ -62,11 +71,36 @@ func (v *errorTxNotFoundResponse) Do(req *http.Request) (*http.Response, error) 
 		return resp, errors.New("missing request")
 	}
 
-	// Error response
+	// Error response (get tx)
 	for _, chain := range getTransactionBlockchains {
-		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), "/tx/"+testTxID(chain)) {
+		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeGetTx+testTxID(chain)) {
 			resp.StatusCode = http.StatusBadRequest
 			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error": "Transaction '` + testTxID(chain) + `' not found"}`)))
+			return resp, nil
+		}
+	}
+
+	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
+	return resp, errors.New("request not found")
+}
+
+// errorSendTxErrorResponse will return an error for the "send tx" response
+type errorSendTxErrorResponse struct{}
+
+func (v *errorSendTxErrorResponse) Do(req *http.Request) (*http.Response, error) {
+	resp := new(http.Response)
+	resp.StatusCode = http.StatusBadRequest
+
+	// No req found
+	if req == nil {
+		return resp, errors.New("missing request")
+	}
+
+	// Error response (send tx)
+	for _, chain := range sendTransactionBlockchains {
+		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeSendTx+testTxHex(chain)) {
+			resp.StatusCode = http.StatusBadRequest
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error": "-27: Transaction already in the mempool"}`)))
 			return resp, nil
 		}
 	}
@@ -391,7 +425,7 @@ func TestClient_GetTransaction(t *testing.T) {
 		}
 	})
 
-	t.Run("missing tx", func(t *testing.T) {
+	t.Run("missing or invalid tx id", func(t *testing.T) {
 		type testData struct {
 			chain Blockchain
 			txID  string
@@ -505,4 +539,139 @@ func BenchmarkClient_GetTransaction(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _ = c.GetTransaction(ctx, BSV, tx)
 	}
+}
+
+func TestClient_SendTransaction(t *testing.T) {
+	t.Parallel()
+
+	t.Run("valid cases", func(t *testing.T) {
+
+		var tests = []struct {
+			chain        Blockchain
+			txHex        string
+			expectedTxID string
+		}{
+			{BCH, testTxHex(BCH), testTxHexID(BCH)},
+			{BSV, testTxHex(BSV), testTxHexID(BSV)},
+			{BTC, testTxHex(BTC), testTxHexID(BTC)},
+			{BTCTestnet, testTxHex(BTCTestnet), testTxHexID(BTCTestnet)},
+			{BTG, testTxHex(BTG), testTxHexID(BTG)},
+			{DASH, testTxHex(DASH), testTxHexID(DASH)},
+			{DOGE, testTxHex(DOGE), testTxHexID(DOGE)},
+			{LTC, testTxHex(LTC), testTxHexID(LTC)},
+		}
+
+		c := NewClient(WithAPIKey(testKey), WithHTTPClient(&validTxResponse{}))
+		ctx := context.Background()
+
+		for _, testCase := range tests {
+			t.Run("chain "+testCase.chain.String()+": SendTransaction("+testCase.txHex+")", func(t *testing.T) {
+				results, err := c.SendTransaction(ctx, testCase.chain, testCase.txHex)
+				require.NoError(t, err)
+				require.NotNil(t, results)
+
+				assert.Equal(t, testCase.expectedTxID, results.Result)
+			})
+		}
+	})
+
+	t.Run("missing or invalid tx hex", func(t *testing.T) {
+		type testData struct {
+			chain Blockchain
+			txHex string
+			err   error
+		}
+		var testCases []testData
+		for _, chain := range sendTransactionBlockchains {
+			testCases = append(testCases, testData{chain: chain, txHex: "", err: ErrInvalidTxHex})
+			testCases = append(testCases, testData{chain: chain, txHex: "12345", err: ErrInvalidTxHex})
+			testCases = append(testCases, testData{chain: chain, txHex: "invalid-tx-hex", err: ErrInvalidTxHex})
+			testCases = append(testCases, testData{chain: chain, txHex: randomHexString(2001), err: ErrTxHexTooLarge})
+		}
+
+		c := NewClient(WithHTTPClient(&validTxResponse{}))
+		ctx := context.Background()
+
+		for _, testCase := range testCases {
+			t.Run("chain "+testCase.chain.String()+": invalid-tx", func(t *testing.T) {
+				results, err := c.SendTransaction(ctx, testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+				assert.ErrorIs(t, err, testCase.err)
+			})
+		}
+	})
+
+	t.Run("unsupported chain", func(t *testing.T) {
+		c := NewClient(WithHTTPClient(&validTxResponse{}))
+		ctx := context.Background()
+		sendTransactionBlockchains = []Blockchain{BSV}
+		results, err := c.SendTransaction(ctx, BTC, testTxHex(BTC))
+		require.Error(t, err)
+		require.Nil(t, results)
+		assert.ErrorIs(t, err, ErrUnsupportedBlockchain)
+	})
+
+	t.Run("error cases", func(t *testing.T) {
+
+		type testData struct {
+			chain Blockchain
+			txHex string
+		}
+		var testCases []testData
+		for _, chain := range sendTransactionBlockchains {
+			testCases = append(testCases, testData{chain: chain, txHex: testTxHex(chain)})
+		}
+
+		for _, testCase := range testCases {
+			t.Run("chain "+testCase.chain.String()+": broadcast error", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorSendTxErrorResponse{}))
+				results, err := c.SendTransaction(context.Background(), testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": http req error", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorDoReqErr{}))
+				results, err := c.SendTransaction(context.Background(), testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": missing body contents", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorDoReqNoBodyErr{}))
+				results, err := c.SendTransaction(context.Background(), testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": error with resp", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorDoReqWithRespErr{}))
+				results, err := c.SendTransaction(context.Background(), testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": invalid json response", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorBadJSONResponse{}))
+				results, err := c.SendTransaction(context.Background(), testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": invalid error json response", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorBadErrorJSONResponse{}))
+				results, err := c.SendTransaction(context.Background(), testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": missing api key", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorMissingAPIKey{}))
+				results, err := c.SendTransaction(context.Background(), testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+		}
+	})
 }

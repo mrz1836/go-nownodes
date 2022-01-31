@@ -64,7 +64,7 @@ func TestBlockchain_BlockBookURL(t *testing.T) {
 	})
 }
 
-func TestBlockchain_ValidateTx(t *testing.T) {
+func TestBlockchain_ValidateTxID(t *testing.T) {
 	t.Parallel()
 
 	var tests = []struct {
@@ -82,19 +82,53 @@ func TestBlockchain_ValidateTx(t *testing.T) {
 		{LTC, testTxID(LTC), true},
 		{BSV, "", false},
 		{BSV, "12345", false},
-		{BSV, testAddress(BSV) + "1", false},
+		{BSV, testTxID(BSV) + "1", false},
 	}
 
 	for _, testCase := range tests {
-		t.Run("chain "+testCase.chain.String()+": ValidateTx()", func(t *testing.T) {
-			assert.Equal(t, testCase.expected, testCase.chain.ValidateTx(testCase.txID))
+		t.Run("chain "+testCase.chain.String()+": ValidateTxID()", func(t *testing.T) {
+			assert.Equal(t, testCase.expected, testCase.chain.ValidateTxID(testCase.txID))
 		})
 	}
 
 	t.Run("unknown blockchain", func(t *testing.T) {
 		u := Blockchain("unknown")
-		assert.Equal(t, false, u.ValidateTx(testBitcoinTxID))
-		assert.Equal(t, false, u.ValidateTx(""))
+		assert.Equal(t, false, u.ValidateTxID(testBitcoinTxID))
+		assert.Equal(t, false, u.ValidateTxID(""))
+	})
+}
+
+func TestBlockchain_ValidateTxHex(t *testing.T) {
+	t.Parallel()
+
+	var tests = []struct {
+		chain    Blockchain
+		txHex    string
+		expected bool
+	}{
+		{BCH, testTxHex(BCH), true},
+		{BSV, testTxHex(BSV), true},
+		{BTC, testTxHex(BTC), true},
+		{BTCTestnet, testTxHex(testBTCTxID), true},
+		{BTG, testTxHex(BTG), true},
+		{DASH, testTxHex(DASH), true},
+		{DOGE, testTxHex(DOGE), true},
+		{LTC, testTxHex(LTC), true},
+		{BSV, "", false},
+		{BSV, "12345", false},
+		{BSV, testTxHex(BSV) + "1", false},
+	}
+
+	for _, testCase := range tests {
+		t.Run("chain "+testCase.chain.String()+": ValidateTxHex()", func(t *testing.T) {
+			assert.Equal(t, testCase.expected, testCase.chain.ValidateTxHex(testCase.txHex))
+		})
+	}
+
+	t.Run("unknown blockchain", func(t *testing.T) {
+		u := Blockchain("unknown")
+		assert.Equal(t, false, u.ValidateTxHex(testBitcoinTxID))
+		assert.Equal(t, false, u.ValidateTxHex(""))
 	})
 }
 
