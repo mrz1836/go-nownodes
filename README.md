@@ -62,9 +62,9 @@ View the generated [documentation](https://pkg.go.dev/github.com/mrz1836/go-nown
       - [ ] tx-specific
   - [ ] **[Node API](https://documenter.getpostman.com/view/13630829/TVmFkLwy#0009132c-1d48-4c03-a891-fe57630776a4)**
     - [ ] **[BCH, BSV, BTC, BTC Testnet, BTG, DASH, DOGE, LTC](https://documenter.getpostman.com/view/13630829/TVmFkLwy#e8c70486-7699-4570-b6e1-ab37ce3699b0)**
+      - [ ] decoderawtransaction
       - [x] getmempoolentry
       - [x] sendrawtransaction
-      - [ ] decoderawtransaction
 
 <br/>
 
