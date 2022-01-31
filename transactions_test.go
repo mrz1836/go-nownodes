@@ -675,3 +675,19 @@ func TestClient_SendTransaction(t *testing.T) {
 		}
 	})
 }
+
+func ExampleClient_SendTransaction() {
+	c := NewClient(WithHTTPClient(&validTxResponse{}))
+	results, _ := c.SendTransaction(context.Background(), BSV, testTxHex(BSV))
+	fmt.Println("broadcast success: " + results.Result)
+	// Output:broadcast success: 15e78db3a6247ca320de2202240f6a4877ea3af338e23bf5ff3e5cbff3763bf6
+}
+
+func BenchmarkClient_SendTransaction(b *testing.B) {
+	c := NewClient(WithHTTPClient(&validTxResponse{}))
+	ctx := context.Background()
+	tx := testTxHex(BSV)
+	for i := 0; i < b.N; i++ {
+		_, _ = c.SendTransaction(ctx, BSV, tx)
+	}
+}
