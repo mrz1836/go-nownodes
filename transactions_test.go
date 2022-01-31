@@ -55,6 +55,15 @@ func (v *validTxResponse) Do(req *http.Request) (*http.Response, error) {
 		}
 	}
 
+	// ANY send tx
+	for _, chain := range sendTransactionBlockchains {
+		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeSendTx) {
+			resp.StatusCode = http.StatusOK
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"result":"` + hashString(req.URL.String()) + `"}`)))
+			return resp, nil
+		}
+	}
+
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
 	return resp, errors.New("request not found")
 }
@@ -565,13 +574,23 @@ func TestClient_SendTransaction(t *testing.T) {
 		ctx := context.Background()
 
 		for _, testCase := range tests {
-			t.Run("chain "+testCase.chain.String()+": SendTransaction("+testCase.txHex+")", func(t *testing.T) {
+			t.Run("chain "+testCase.chain.String()+": SendTransaction("+testCase.txHex[:25]+")", func(t *testing.T) {
 				results, err := c.SendTransaction(ctx, testCase.chain, testCase.txHex)
 				require.NoError(t, err)
 				require.NotNil(t, results)
 
 				assert.Equal(t, testCase.expectedTxID, results.Result)
 			})
+		}
+	})
+
+	t.Run("tx hex too large", func(t *testing.T) {
+		c := NewClient(WithHTTPClient(&validNodeResponse{}))
+		ctx := context.Background()
+		for _, chain := range sendRawTransactionBlockchains {
+			results, err := c.SendTransaction(ctx, chain, randomHexString(2001))
+			require.NoError(t, err)
+			require.NotNil(t, results)
 		}
 	})
 
@@ -586,7 +605,6 @@ func TestClient_SendTransaction(t *testing.T) {
 			testCases = append(testCases, testData{chain: chain, txHex: "", err: ErrInvalidTxHex})
 			testCases = append(testCases, testData{chain: chain, txHex: "12345", err: ErrInvalidTxHex})
 			testCases = append(testCases, testData{chain: chain, txHex: "invalid-tx-hex", err: ErrInvalidTxHex})
-			testCases = append(testCases, testData{chain: chain, txHex: randomHexString(2001), err: ErrTxHexTooLarge})
 		}
 
 		c := NewClient(WithHTTPClient(&validTxResponse{}))
@@ -689,5 +707,161 @@ func BenchmarkClient_SendTransaction(b *testing.B) {
 	tx := testTxHex(BSV)
 	for i := 0; i < b.N; i++ {
 		_, _ = c.SendTransaction(ctx, BSV, tx)
+	}
+}
+
+func TestClient_SendRawTransaction(t *testing.T) {
+	t.Parallel()
+
+	t.Run("valid cases", func(t *testing.T) {
+
+		var tests = []struct {
+			chain        Blockchain
+			txHex        string
+			id           string
+			expectedTxID string
+			expectedID   string
+		}{
+			{BCH, testTxHex(BCH), testUniqueID, testTxHexID(BCH), testUniqueID},
+			{BSV, testTxHex(BSV), testUniqueID, testTxHexID(BSV), testUniqueID},
+			{BSV, testTxHex(BSV), "", testTxHexID(BSV), "f3c93c905ab47662d9b07851cda78e8d11ea1a10bad5308dc33b679a8c87dfab"},
+			{BTC, testTxHex(BTC), testUniqueID, testTxHexID(BTC), testUniqueID},
+			{BTCTestnet, testTxHex(BTCTestnet), testUniqueID, testTxHexID(BTCTestnet), testUniqueID},
+			{BTG, testTxHex(BTG), testUniqueID, testTxHexID(BTG), testUniqueID},
+			{DASH, testTxHex(DASH), testUniqueID, testTxHexID(DASH), testUniqueID},
+			{DOGE, testTxHex(DOGE), testUniqueID, testTxHexID(DOGE), testUniqueID},
+			{LTC, testTxHex(LTC), testUniqueID, testTxHexID(LTC), testUniqueID},
+		}
+
+		c := NewClient(WithAPIKey(testKey), WithHTTPClient(&validNodeResponse{}))
+		ctx := context.Background()
+
+		for _, testCase := range tests {
+			t.Run("chain "+testCase.chain.String()+": SendRawTransaction("+testCase.txHex[:25]+"...)", func(t *testing.T) {
+				results, err := c.SendRawTransaction(ctx, testCase.chain, testCase.txHex, testCase.id)
+				require.NoError(t, err)
+				require.NotNil(t, results)
+
+				assert.Equal(t, testCase.expectedTxID, results.Result)
+				assert.Equal(t, testCase.expectedID, results.ID)
+			})
+		}
+	})
+
+	t.Run("missing or invalid tx hex", func(t *testing.T) {
+		type testData struct {
+			chain Blockchain
+			txHex string
+			id    string
+			err   error
+		}
+		var testCases []testData
+		for _, chain := range sendTransactionBlockchains {
+			testCases = append(testCases, testData{chain: chain, txHex: "", id: testUniqueID, err: ErrInvalidTxHex})
+			testCases = append(testCases, testData{chain: chain, txHex: "12345", id: testUniqueID, err: ErrInvalidTxHex})
+			testCases = append(testCases, testData{chain: chain, txHex: "invalid-tx-hex", id: testUniqueID, err: ErrInvalidTxHex})
+		}
+
+		c := NewClient(WithHTTPClient(&validNodeResponse{}))
+		ctx := context.Background()
+
+		for _, testCase := range testCases {
+			t.Run("chain "+testCase.chain.String()+": invalid-tx", func(t *testing.T) {
+				results, err := c.SendRawTransaction(ctx, testCase.chain, testCase.txHex, testCase.id)
+				require.Error(t, err)
+				require.Nil(t, results)
+				assert.ErrorIs(t, err, testCase.err)
+			})
+		}
+	})
+
+	t.Run("unsupported chain", func(t *testing.T) {
+		c := NewClient(WithHTTPClient(&validNodeResponse{}))
+		ctx := context.Background()
+		sendRawTransactionBlockchains = []Blockchain{BSV}
+		results, err := c.SendRawTransaction(ctx, BTC, testTxHex(BTC), testUniqueID)
+		require.Error(t, err)
+		require.Nil(t, results)
+		assert.ErrorIs(t, err, ErrUnsupportedBlockchain)
+	})
+
+	t.Run("error cases", func(t *testing.T) {
+
+		type testData struct {
+			chain Blockchain
+			txHex string
+			id    string
+		}
+		var testCases []testData
+		for _, chain := range sendTransactionBlockchains {
+			testCases = append(testCases, testData{chain: chain, txHex: testTxHex(chain), id: testUniqueID})
+		}
+
+		for _, testCase := range testCases {
+			t.Run("chain "+testCase.chain.String()+": broadcast error", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorNodeErrorResponse{}))
+				results, err := c.SendRawTransaction(context.Background(), testCase.chain, testCase.txHex, testCase.id)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": http req error", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorDoReqErr{}))
+				results, err := c.SendRawTransaction(context.Background(), testCase.chain, testCase.txHex, testCase.id)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": missing body contents", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorDoReqNoBodyErr{}))
+				results, err := c.SendRawTransaction(context.Background(), testCase.chain, testCase.txHex, testCase.id)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": error with resp", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorDoReqWithRespErr{}))
+				results, err := c.SendRawTransaction(context.Background(), testCase.chain, testCase.txHex, testCase.id)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": invalid json response", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorBadJSONResponse{}))
+				results, err := c.SendRawTransaction(context.Background(), testCase.chain, testCase.txHex, testCase.id)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": invalid error json response", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorBadErrorJSONResponse{}))
+				results, err := c.SendTransaction(context.Background(), testCase.chain, testCase.txHex)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+
+			t.Run("chain "+testCase.chain.String()+": missing api key", func(t *testing.T) {
+				c := NewClient(WithHTTPClient(&errorMissingAPIKey{}))
+				results, err := c.SendRawTransaction(context.Background(), testCase.chain, testCase.txHex, testCase.id)
+				require.Error(t, err)
+				require.Nil(t, results)
+			})
+		}
+	})
+}
+
+func ExampleClient_SendRawTransaction() {
+	c := NewClient(WithHTTPClient(&validNodeResponse{}))
+	results, _ := c.SendRawTransaction(context.Background(), BSV, testTxHex(BSV), testUniqueID)
+	fmt.Println("broadcast success: " + results.Result)
+	// Output:broadcast success: 15e78db3a6247ca320de2202240f6a4877ea3af338e23bf5ff3e5cbff3763bf6
+}
+
+func BenchmarkClient_SendRawTransaction(b *testing.B) {
+	c := NewClient(WithHTTPClient(&validNodeResponse{}))
+	ctx := context.Background()
+	tx := testTxHex(BSV)
+	for i := 0; i < b.N; i++ {
+		_, _ = c.SendRawTransaction(ctx, BSV, tx, testUniqueID)
 	}
 }

@@ -46,7 +46,9 @@ type Output struct {
 
 // BroadcastResult is the successful broadcast results
 type BroadcastResult struct {
-	Result string `json:"result"` // {"result": "15e78db3a6247ca320de2202240f6a4877ea3af338e23bf5ff3e5cbff3763bf6"}
+	NodeError
+	ID     string `json:"id,omitempty"`     // The unique ID you provided {"result": "15e78db3a6247ca320de2202240f6a4877ea3af338e23bf5ff3e5cbff3763bf6"}
+	Result string `json:"result,omitempty"` // The Tx ID {"result": "15e78db3a6247ca320de2202240f6a4877ea3af338e23bf5ff3e5cbff3763bf6"}
 }
 
 // GetTransaction will get transaction information by a given TxID
@@ -69,8 +71,9 @@ func (c *Client) GetTransaction(ctx context.Context, chain Blockchain, txID stri
 	return info, nil
 }
 
-// SendTransaction will submit a broadcast request with the given tx hex payload
+// SendTransaction will submit a broadcast request (GET) with the given tx hex payload
 //
+// NOTE: max hex size of 2000 characters (otherwise it will use SendRawTransaction)
 // This method supports the following chains: BCH, BSV, BTC, BTCTestnet, BTG, DASH, DOGE, LTC
 func (c *Client) SendTransaction(ctx context.Context, chain Blockchain, txHex string) (*BroadcastResult, error) {
 
@@ -81,13 +84,41 @@ func (c *Client) SendTransaction(ctx context.Context, chain Blockchain, txHex st
 
 	// Max size of a GET request: 2048 (not sure how NowNodes is handling this)
 	if len(txHex) > maxTxHexLengthOnSend {
-		return nil, ErrTxHexTooLarge
+		return c.SendRawTransaction(ctx, chain, txHex, hashString(txHex))
 	}
 
 	// Fire the HTTP request
 	result := new(BroadcastResult)
 	if err := blockBookRequest(
 		ctx, c, sendTransactionBlockchains, chain, routeSendTx+txHex, &result,
+	); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// SendRawTransaction will submit a broadcast request (POST) with the given tx hex payload
+//
+// param: id is a unique identifier for your own use
+// This method supports the following chains: BSV, BTC, BTCTestnet, BTG, DASH, DOGE, LTC
+func (c *Client) SendRawTransaction(ctx context.Context, chain Blockchain, txHex, id string) (*BroadcastResult, error) {
+
+	// Validate the input
+	if !chain.ValidateTxHex(txHex) {
+		return nil, ErrInvalidTxHex
+	}
+
+	// Empty id?
+	if len(id) == 0 {
+		id = hashString(txHex)
+	}
+
+	// Fire the HTTP request
+	result := new(BroadcastResult)
+	if err := nodeRequest(
+		ctx, c, sendRawTransactionBlockchains, chain,
+		createPayload(c.options.apiKey, nodeMethodSendRawTx, id, []string{txHex}),
+		&result,
 	); err != nil {
 		return nil, err
 	}
