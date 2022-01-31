@@ -20,6 +20,10 @@ const (
 	LTC        Blockchain = blockchainLTC        // LiteCoin: https://litecoin.org/
 )
 
+const (
+	period = "."
+)
+
 // String is the string version of the blockchain
 func (n Blockchain) String() string {
 	return string(n)
@@ -29,24 +33,29 @@ func (n Blockchain) String() string {
 func (n Blockchain) BlockBookURL() string {
 	switch n {
 	case BCH:
-		return blockchainBCH + "." + nowNodesURL
+		return blockchainBCH + period + nowNodesURL
 	case BSV:
-		return blockchainBSV + "." + nowNodesURL
+		return blockchainBSV + period + nowNodesURL
 	case BTC:
-		return blockchainBTC + "." + nowNodesURL
+		return blockchainBTC + period + nowNodesURL
 	case BTCTestnet:
-		return blockchainBTCTestnet + "." + nowNodesURL
+		return blockchainBTCTestnet + period + nowNodesURL
 	case BTG:
-		return blockchainBTG + "." + nowNodesURL
+		return blockchainBTG + period + nowNodesURL
 	case DASH:
-		return blockchainDASH + "." + nowNodesURL
+		return blockchainDASH + period + nowNodesURL
 	case DOGE:
-		return blockchainDOGE + "." + nowNodesURL
+		return blockchainDOGE + period + nowNodesURL
 	case LTC:
-		return blockchainLTC + "." + nowNodesURL
+		return blockchainLTC + period + nowNodesURL
 	default:
 		return ""
 	}
+}
+
+// NodeAPIURL is the url for the Node API
+func (n Blockchain) NodeAPIURL() string {
+	return n.BlockBookURL() // Right now it's the same urls
 }
 
 // ValidateTxID will do basic validations on the tx id string

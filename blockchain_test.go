@@ -64,6 +64,35 @@ func TestBlockchain_BlockBookURL(t *testing.T) {
 	})
 }
 
+func TestBlockchain_NodeAPIURL(t *testing.T) {
+	t.Parallel()
+
+	var tests = []struct {
+		chain    Blockchain
+		expected string
+	}{
+		{BCH, blockchainBCH + "." + nowNodesURL},
+		{BSV, blockchainBSV + "." + nowNodesURL},
+		{BTC, blockchainBTC + "." + nowNodesURL},
+		{BTCTestnet, blockchainBTCTestnet + "." + nowNodesURL},
+		{BTG, blockchainBTG + "." + nowNodesURL},
+		{DASH, blockchainDASH + "." + nowNodesURL},
+		{DOGE, blockchainDOGE + "." + nowNodesURL},
+		{LTC, blockchainLTC + "." + nowNodesURL},
+	}
+
+	for _, testCase := range tests {
+		t.Run("chain "+testCase.chain.String()+": NodeAPIURL()", func(t *testing.T) {
+			assert.Equal(t, testCase.expected, testCase.chain.NodeAPIURL())
+		})
+	}
+
+	t.Run("unknown blockchain", func(t *testing.T) {
+		u := Blockchain("unknown")
+		assert.Empty(t, u.NodeAPIURL())
+	})
+}
+
 func TestBlockchain_ValidateTxID(t *testing.T) {
 	t.Parallel()
 
