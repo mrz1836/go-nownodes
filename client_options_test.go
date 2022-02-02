@@ -61,7 +61,7 @@ func TestWithHTTPClient(t *testing.T) {
 		options := &ClientOptions{}
 		opt := WithHTTPClient(nil)
 		opt(options)
-		assert.Nil(t, options.httpOptions)
+		assert.Nil(t, options.httpClient)
 	})
 
 	t.Run("test applying option", func(t *testing.T) {
