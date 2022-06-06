@@ -5,7 +5,7 @@
 [![Build Status](https://img.shields.io/github/workflow/status/mrz1836/go-nownodes/run-go-tests?logo=github&v=3)](https://github.com/mrz1836/go-nownodes/actions)
 [![Report](https://goreportcard.com/badge/github.com/mrz1836/go-nownodes?style=flat&v=3)](https://goreportcard.com/report/github.com/mrz1836/go-nownodes)
 [![codecov](https://codecov.io/gh/mrz1836/go-nownodes/branch/master/graph/badge.svg?v=3)](https://codecov.io/gh/mrz1836/go-nownodes)
-[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/mrz1836/go-nownodes&style=flat&v=3)](https://mergify.io)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/mrz1836/go-nownodes&style=flat&v=3)](https://mergify.io)
 [![Go](https://img.shields.io/github/go-mod/go-version/mrz1836/go-nownodes?v=3)](https://golang.org/)
 <br>
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/mrz1836/go-nownodes)
@@ -186,7 +186,7 @@ vet                           Run the Go vet application
 
 ## Examples & Tests
 All unit tests and [examples](examples) run via [Github Actions](https://github.com/mrz1836/go-nownodes/actions) and
-uses [Go version 1.16.x](https://golang.org/doc/go1.16). View the [configuration file](.github/workflows/run-tests.yml).
+uses [Go version 1.17.x](https://golang.org/doc/go1.17). View the [configuration file](.github/workflows/run-tests.yml).
 
 <br/>
 
