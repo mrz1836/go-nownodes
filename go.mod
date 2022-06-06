@@ -18,3 +18,6 @@ require (
 
 // Issue for Ask Nancy deps
 replace github.com/yuin/goldmark => github.com/yuin/goldmark v1.4.12
+
+// Issue for Ask Nancy deps
+replace golang.org/x/text => golang.org/x/text v0.3.7
