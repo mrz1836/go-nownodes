@@ -241,7 +241,7 @@ type nodePayload struct {
 
 // createPayload will create the JSON payload for the NodeAPI requests
 func createPayload(apiKey, method, id string, params []string) []byte {
-	b, _ := json.Marshal(nodePayload{ // nolint: errchkjson // not going to produce an error
+	b, _ := json.Marshal(nodePayload{ //nolint:errchkjson // not going to produce an error
 		APIKey:  apiKey,
 		JSONRPC: "2.0",
 		ID:      id,
