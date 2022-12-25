@@ -2,7 +2,7 @@
 > The unofficial golang implementation for the [NOWNodes.io API](https://nownodes.io)
 
 [![Release](https://img.shields.io/github/release-pre/mrz1836/go-nownodes.svg?logo=github&style=flat&v=3)](https://github.com/mrz1836/go-nownodes/releases)
-[![Build Status](https://img.shields.io/github/workflow/status/mrz1836/go-nownodes/run-go-tests?logo=github&v=3)](https://github.com/mrz1836/go-nownodes/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/mrz1836/go-nownodes/run-tests.yml?branch=master&logo=github&v=3)](https://github.com/mrz1836/go-nownodes/actions)
 [![Report](https://goreportcard.com/badge/github.com/mrz1836/go-nownodes?style=flat&v=3)](https://goreportcard.com/report/github.com/mrz1836/go-nownodes)
 [![codecov](https://codecov.io/gh/mrz1836/go-nownodes/branch/master/graph/badge.svg?v=3)](https://codecov.io/gh/mrz1836/go-nownodes)
 [![Mergify Status](https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/mrz1836/go-nownodes&style=flat&v=3)](https://mergify.io)
