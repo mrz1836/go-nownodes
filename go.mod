@@ -15,6 +15,3 @@ require (
 	github.com/stretchr/objx v0.5.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-// Issue for Ask Nancy deps
-replace github.com/yuin/goldmark => github.com/yuin/goldmark v1.4.13
