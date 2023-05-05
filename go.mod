@@ -1,6 +1,6 @@
 module github.com/mrz1836/go-nownodes
 
-go 1.17
+go 1.18
 
 require (
 	github.com/gojektech/heimdall/v6 v6.1.0
