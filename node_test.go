@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -32,7 +32,7 @@ func (v *validNodeResponse) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range sendRawTransactionBlockchains {
 		if strings.Contains(req.Host, chain.NodeAPIURL()) && data.Method == nodeMethodSendRawTx {
 			resp.StatusCode = http.StatusOK
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"result": "` + testTxHexID(chain) + `","error": null,"id": "` + data.ID + `"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"result": "` + testTxHexID(chain) + `","error": null,"id": "` + data.ID + `"}`)))
 			return resp, nil
 		}
 	}
@@ -41,12 +41,12 @@ func (v *validNodeResponse) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range getMempoolEntryBlockchains {
 		if strings.Contains(req.Host, chain.NodeAPIURL()) && data.Method == nodeMethodGetMempoolEntry {
 			resp.StatusCode = http.StatusOK
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"result": {"size": 381,"fee": 9.6e-7,"modifiedfee": 9.6e-7,"time": 1643661192,"height": 724704,"depends": []},"error": null,"id": "` + data.ID + `"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"result": {"size": 381,"fee": 9.6e-7,"modifiedfee": 9.6e-7,"time": 1643661192,"height": 724704,"depends": []},"error": null,"id": "` + data.ID + `"}`)))
 			return resp, nil
 		}
 	}
 
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
 	return resp, errors.New("request not found")
 }
 
@@ -73,7 +73,7 @@ func (v *errorNodeErrorResponse) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range sendRawTransactionBlockchains {
 		if strings.Contains(req.Host, chain.NodeAPIURL()) && data.Method == nodeMethodSendRawTx {
 			resp.StatusCode = http.StatusInternalServerError
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"result": null,"error": {"code": -27,"message": "Transaction already in the mempool"},"id": "` + data.ID + `"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"result": null,"error": {"code": -27,"message": "Transaction already in the mempool"},"id": "` + data.ID + `"}`)))
 			return resp, nil
 		}
 	}
@@ -82,11 +82,11 @@ func (v *errorNodeErrorResponse) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range getMempoolEntryBlockchains {
 		if strings.Contains(req.Host, chain.NodeAPIURL()) && data.Method == nodeMethodGetMempoolEntry {
 			resp.StatusCode = http.StatusInternalServerError
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"result": null,"error": {"code": -5,"message": "Transaction not in mempool"},"id": "` + data.ID + `"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"result": null,"error": {"code": -5,"message": "Transaction not in mempool"},"id": "` + data.ID + `"}`)))
 			return resp, nil
 		}
 	}
 
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
 	return resp, errors.New("request not found")
 }

@@ -3,7 +3,7 @@ package nownodes
 import (
 	"bytes"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -29,7 +29,7 @@ type errorDoReqWithRespErr struct{}
 func (v *errorDoReqWithRespErr) Do(_ *http.Request) (*http.Response, error) {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusBadRequest
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(``)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(``)))
 	return resp, errors.New("http error or Do() error")
 }
 
@@ -39,7 +39,7 @@ type errorBadJSONResponse struct{}
 func (v *errorBadJSONResponse) Do(_ *http.Request) (*http.Response, error) {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusOK
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"invalid":json}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"invalid":json}`)))
 	return resp, nil
 }
 
@@ -49,7 +49,7 @@ type errorBadErrorJSONResponse struct{}
 func (v *errorBadErrorJSONResponse) Do(_ *http.Request) (*http.Response, error) {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusBadRequest
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"invalid":json}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"invalid":json}`)))
 	return resp, nil
 }
 
@@ -59,7 +59,7 @@ type errorMissingAPIKey struct{}
 func (v *errorMissingAPIKey) Do(_ *http.Request) (*http.Response, error) {
 	resp := new(http.Response)
 	resp.StatusCode = http.StatusOK
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"message": "Missing api-key header"}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"message": "Missing api-key header"}`)))
 	// {"message": "Unknown API_key"}
 	return resp, nil
 }

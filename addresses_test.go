@@ -5,7 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"testing"
@@ -41,12 +41,12 @@ func (v *validAddressResponse) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range getAddressBlockchains {
 		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeGetAddress+testAddress(chain)) {
 			resp.StatusCode = http.StatusOK
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(addressResponses[chain.String()])))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(addressResponses[chain.String()])))
 			return resp, nil
 		}
 	}
 
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
 	return resp, errors.New("request not found")
 }
 
@@ -66,12 +66,12 @@ func (v *errorInvalidAddress) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range getAddressBlockchains {
 		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeGetAddress+testAddress(chain)) {
 			resp.StatusCode = http.StatusBadRequest
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error": "Invalid address, decoded address is of unknown format"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error": "Invalid address, decoded address is of unknown format"}`)))
 			return resp, nil
 		}
 	}
 
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
 	return resp, errors.New("request not found")
 }
 

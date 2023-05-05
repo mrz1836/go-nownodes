@@ -5,7 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"testing"
@@ -41,7 +41,7 @@ func (v *validTxResponse) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range getTransactionBlockchains {
 		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeGetTx+testTxID(chain)) {
 			resp.StatusCode = http.StatusOK
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(transactionResponses[chain.String()])))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(transactionResponses[chain.String()])))
 			return resp, nil
 		}
 	}
@@ -50,7 +50,7 @@ func (v *validTxResponse) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range sendTransactionBlockchains {
 		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeSendTx+testTxHex(chain)) {
 			resp.StatusCode = http.StatusOK
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"result":"` + testTxHexID(chain) + `"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"result":"` + testTxHexID(chain) + `"}`)))
 			return resp, nil
 		}
 	}
@@ -59,12 +59,12 @@ func (v *validTxResponse) Do(req *http.Request) (*http.Response, error) {
 	for _, chain := range sendTransactionBlockchains {
 		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeSendTx) {
 			resp.StatusCode = http.StatusOK
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"result":"` + hashString(req.URL.String()) + `"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"result":"` + hashString(req.URL.String()) + `"}`)))
 			return resp, nil
 		}
 	}
 
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
 	return resp, errors.New("request not found")
 }
 
@@ -84,12 +84,12 @@ func (v *errorTxNotFoundResponse) Do(req *http.Request) (*http.Response, error) 
 	for _, chain := range getTransactionBlockchains {
 		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeGetTx+testTxID(chain)) {
 			resp.StatusCode = http.StatusBadRequest
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error": "Transaction '` + testTxID(chain) + `' not found"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error": "Transaction '` + testTxID(chain) + `' not found"}`)))
 			return resp, nil
 		}
 	}
 
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
 	return resp, errors.New("request not found")
 }
 
@@ -109,12 +109,12 @@ func (v *errorSendTxErrorResponse) Do(req *http.Request) (*http.Response, error)
 	for _, chain := range sendTransactionBlockchains {
 		if strings.Contains(req.Host, chain.BlockBookURL()) && strings.Contains(req.URL.String(), routeSendTx+testTxHex(chain)) {
 			resp.StatusCode = http.StatusBadRequest
-			resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error": "-27: Transaction already in the mempool"}`)))
+			resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error": "-27: Transaction already in the mempool"}`)))
 			return resp, nil
 		}
 	}
 
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
+	resp.Body = io.NopCloser(bytes.NewBuffer([]byte(`{"error":"no-route-found"}`)))
 	return resp, errors.New("request not found")
 }
 
