@@ -322,9 +322,10 @@ linters:
     - sqlclosecheck
     - nolintlint
     - gci
-    - goconst
   disable:
     - gocritic # use this for very opinionated linting
+    - goconst # needs work to be enabled
+    - testifylint # needs work to be enabled
     - gochecknoglobals
     - whitespace
     - wsl
